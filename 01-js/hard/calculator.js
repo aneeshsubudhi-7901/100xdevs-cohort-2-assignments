@@ -16,6 +16,40 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor() {
+    this.result = 0;
+  }
+
+  add(number) {
+    this.result += number;
+  }
+
+  subtract(number) {
+    this.result -= number;
+  }
+
+  multiply(number) {
+    this.result *= number;
+  }
+
+  divide(number) {
+    this.result /= number;
+  }
+
+  clear() {
+    this.result = 0;
+  }
+
+  getResult() {
+    return this.result;
+  }
+
+  calculate(exp) {
+    //first sanitize the expression, like removing the excess spaces
+    //validate the expressions for non numerical characters, non balancing paranthesis etc.
+    //focussing first on solving the whatever is within the brackets
+  }
+}
 
 module.exports = Calculator;

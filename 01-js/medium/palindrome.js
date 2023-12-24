@@ -4,6 +4,29 @@
 */
 
 function isPalindrome(str) {
+  let strLen = str.length;
+  str = str.toLowerCase();
+  let start = 0;
+  let end = strLen - 1;
+  const excludeCharSet = new Set([" ", "?", ",", "!", ".", ";"]);
+  while (start < end) {
+    if (excludeCharSet.has(str[start])) {
+      start++;
+      continue;
+    }
+
+    if (excludeCharSet.has(str[end])) {
+      end--;
+      continue;
+    }
+
+    if (str[start] !== str[end]) {
+      return false;
+    }
+    start++;
+    end--;
+  }
+
   return true;
 }
 
