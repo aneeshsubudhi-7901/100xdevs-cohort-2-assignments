@@ -39,11 +39,88 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+app.use(bodyParser.json());
+
+const todosArr = [];
+
+app.get("/todos", (req, res) => {
+  try {
+    res.status(200).json(todosArr);
+  } catch (err) {
+    res.status(404).json({ error: "error in returning the todo items" });
+  }
+});
+
+app.get("/todos/:id", (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const fetchedTodo = todosArr.find((todo) => todo.id === Number(todoId));
+    if (fetchedTodo) {
+      res.status(200).json(fetchedTodo);
+    } else {
+      res.status(404).json({ message: "Desired todo not found" });
+    }
+  } catch (err) {
+    res.status(404).json();
+  }
+});
+
+app.post("/todos", (req, res) => {
+  try {
+    const todoToSave = req.body;
+    todoToSave["id"] = Math.random(100);
+    todosArr.push(todoToSave);
+    res.status(201).json({ id: todoToSave.id });
+  } catch (err) {
+    res.status(404).json();
+  }
+});
+
+app.put("/todos/:id", (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const updateTodoContent = req.body;
+    const fetchedTodo = todosArr.find((todo) => todo.id === Number(todoId));
+    if (fetchedTodo) {
+      for (const prop in updateTodoContent) {
+        fetchedTodo[prop] = updateTodoContent[prop];
+      }
+      res.status(200).json();
+    } else {
+      res.status(404).json({ message: "desired todo to update not found" });
+    }
+  } catch (err) {
+    res.status(404).json();
+  }
+});
+
+app.delete("/todos/:id", (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todoIndex = todosArr.findIndex((todo) => todo.id === Number(todoId));
+    console.log(todoIndex);
+    if (todoIndex == -1) {
+      res.status(404).json({ message: "desired todo to delete not found" });
+    } else {
+      todosArr.splice(todoIndex, 1);
+      res.status(200).json();
+    }
+  } catch (err) {
+    res.status(404).json();
+  }
+});
+
+app.all("*", (req, res) => {
+  res.status(404).send("Path Not found");
+});
+
+// app.listen(3000, () => {
+//   console.log("Listening at port 3000")
+// })
+
+module.exports = app;
